@@ -240,5 +240,3 @@ dmypy.json
 cython_debug/
 
 /.idea/*
-
-config.toml
