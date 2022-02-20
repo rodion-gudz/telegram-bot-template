@@ -16,4 +16,4 @@ async def cmd_start(message: types.Message, f: FMT, bot: Bot):
     user_id = message.from_user.id
     if not await f.db.is_registered(user_id):
         await f.db.register(user_id)
-    await message.reply(bot.me())
+    await message.reply("Hi, there!")
