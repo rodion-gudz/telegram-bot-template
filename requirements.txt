@@ -1,9 +1,10 @@
-aiogram==3.0.0b2
 aiogram-dialog==2.0.0b1
+aiogram==3.0.0b2
 aioredis==2.0.1
-toml==0.10.2
-sqlalchemy==1.4.31
 aiosqlite==0.17.0
-pyrogram==1.4.7
-tgcrypto==1.2.3
 cachetools==5.0.0
+coloredlogs==15.0.1
+pyrogram==1.4.7
+sqlalchemy==1.4.31
+tgcrypto==1.2.3
+toml==0.10.2

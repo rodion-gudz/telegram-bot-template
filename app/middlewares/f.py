@@ -40,7 +40,7 @@ class FMiddleware(BaseMiddleware):
         async with self.sessionmanager() as session:
             data["session"] = session
             data["f"] = FMT(db=session, config=self.config)
-            data["bot"] = self.bot
+            data["app"] = self.bot
             data["client"] = self.client
             await handler(event, data)
 

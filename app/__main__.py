@@ -2,6 +2,7 @@ import argparse
 import asyncio
 import logging
 
+import coloredlogs
 from aiogram import Bot, types
 from aiogram.client.session.aiohttp import AiohttpSession
 from aiogram.client.telegram import TelegramAPIServer
@@ -12,7 +13,7 @@ from app.config_parser import parse_config
 
 
 def parse_arguments():
-    parser = argparse.ArgumentParser(description="Process bot configuration.")
+    parser = argparse.ArgumentParser(description="Process app configuration.")
     parser.add_argument("--config", "-c", type=str, help="configuration file", default="config.toml")
     parser.add_argument("--test", "-t", help="test bot token", action="store_true")
     parser.add_argument("--redis", "-r", type=str, help="use redis storage", default=False)
@@ -38,6 +39,7 @@ def register_all(config, sessionmanager, bot, client):
 
 
 async def main():
+    coloredlogs.install()
     logging.basicConfig(
         level=logging.INFO,
         format="%(asctime)s | %(levelname)s | %(name)s | %(message)s",
@@ -52,11 +54,12 @@ async def main():
     session = AiohttpSession(api=TelegramAPIServer.from_base(config.api))
     token = config.test_token if arguments.test else config.token
     bot = Bot(token, parse_mode="HTML", session=session)
-    client = Client("bot",
+    client = Client("app",
                     no_updates=True,
                     api_id=2040,
                     api_hash="b18441a1ff607e10a989891a5462e627",
-                    bot_token=token)
+                    bot_token=token,
+                    workdir='../')
     register_all(config, sessionmanager, bot, client)
 
     await set_bot_commands(bot)
