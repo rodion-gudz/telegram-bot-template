@@ -9,7 +9,7 @@ def generate(config):
         is_admin: bool
 
         async def __call__(self, message: types.Message) -> bool:
-            return self.is_admin is (message.from_user.id in config.admins)
+            return self.is_admin is (message.from_user.id in config.admin_ids)
 
     return IsAdmin
 

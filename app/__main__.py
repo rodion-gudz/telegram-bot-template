@@ -8,6 +8,7 @@ from aiogram.client.session.aiohttp import AiohttpSession
 from aiogram.client.telegram import TelegramAPIServer
 from pyrogram import Client
 
+import app
 from app import db, dp, storage
 from app.config_parser import parse_config
 
@@ -48,6 +49,8 @@ async def main():
 
     arguments = parse_arguments()
     config = parse_config(arguments.config)
+    app.owner_id = config.owner_id
+    app.admin_ids = config.admin_ids
 
     sessionmanager = await db.init(config.engine)
 
@@ -55,7 +58,7 @@ async def main():
     token = config.test_token if arguments.test else config.token
     bot = Bot(token, parse_mode="HTML", session=session)
     client = Client("app",
-                    no_updates=True,
+                    parse_mode="HTML",
                     api_id=2040,
                     api_hash="b18441a1ff607e10a989891a5462e627",
                     bot_token=token,

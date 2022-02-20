@@ -11,8 +11,3 @@ from app.db.functions import DB
 class FMT:
     db: DB
     config: Config
-
-
-class FRouter(Router):
-    def init(self):
-        self.message.bind_filter()  # // self.filters.extend(filters)

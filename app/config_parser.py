@@ -10,7 +10,8 @@ class Config:
     token: str
     test_token: str
     api: str
-    admins: List[int]
+    owner_id: int
+    admin_ids: List[int]
     engine: str
 
 
@@ -29,6 +30,7 @@ def parse_config(config_file: str) -> Config:
         token=data["bot"]["token"],
         test_token=data["bot"]["test_token"],
         api=data["bot"].get("api", "https://api.telegram.org/"),
-        admins=data["bot"]["admins"],
+        owner_id=data["bot"]["owner"],
+        admin_ids=data["bot"]["admins"],
         engine=data["database"]["engine"]
     )
