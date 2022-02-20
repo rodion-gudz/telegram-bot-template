@@ -239,8 +239,4 @@ dmypy.json
 # Cython debug symbols
 cython_debug/
 
-/.idea/misc.xml
-/.idea/modules.xml
-/.idea/inspectionProfiles/profiles_settings.xml
-/.idea/inspectionProfiles/Project_Default.xml
-/.idea/telegram-bot-template.iml
+/.idea/*
