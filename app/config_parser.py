@@ -1,0 +1,34 @@
+import os
+from typing import List
+from dataclasses import dataclass
+
+import toml
+
+
+@dataclass
+class Config:
+    token: str
+    test_token: str
+    api: str
+    admins: List[int]
+    engine: str
+
+
+def parse_config(config_file: str) -> Config:
+    if not os.path.isfile(config_file) and not config_file.endswith(".toml"):
+        config_file += ".toml"
+
+    if not os.path.isfile(config_file):
+        raise FileNotFoundError(f"Config file not found: {config_file} no such file")
+
+    with open(config_file, "r") as f:
+        data = toml.load(f)
+
+    # TODO: automatic config parsing based on class fields
+    return Config(
+        token=data["bot"]["token"],
+        test_token=data["bot"]["test_token"],
+        api=data["bot"].get("api", "https://api.telegram.org/"),
+        admins=data["bot"]["admins"],
+        engine=data["database"]["engine"]
+    )
