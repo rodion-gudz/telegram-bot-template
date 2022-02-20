@@ -1,8 +1,0 @@
-[bot]
-token = "TOKEN"
-test_token = "TEST_TOKEN"
-api = "https://api.telegram.org/"
-admins = [123]
-
-[database]
-engine = "sqlite+aiosqlite:///database.db"
