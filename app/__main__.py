@@ -2,13 +2,12 @@ import argparse
 import asyncio
 import logging
 
-from aiogram import Bot, Dispatcher, types, Router
+from aiogram import Bot, types
 from aiogram.client.session.aiohttp import AiohttpSession
 from aiogram.client.telegram import TelegramAPIServer
-from aiogram.dispatcher.fsm.storage.memory import MemoryStorage
-from aiogram.dispatcher.fsm.storage.redis import RedisStorage
+from pyrogram import Client
 
-from app import db
+from app import db, dp, storage
 from app.config_parser import parse_config
 
 
@@ -28,14 +27,14 @@ async def set_bot_commands(bot: Bot):
     await bot.set_my_commands(commands, scope=types.BotCommandScopeDefault())
 
 
-def register_all(dp: Router, config, sessionmanager):
+def register_all(config, sessionmanager, bot, client):
     from app import filters
-    from app import handlers
     from app import middlewares
 
-    filters.register(dp, config)
-    handlers.register(dp)
-    middlewares.register(dp, config, sessionmanager)
+    filters.register(config)
+    # noinspection PyUnresolvedReferences
+    import app.handlers
+    middlewares.register(config, sessionmanager, bot, client)
 
 
 async def main():
@@ -53,14 +52,17 @@ async def main():
     session = AiohttpSession(api=TelegramAPIServer.from_base(config.api))
     token = config.test_token if arguments.test else config.token
     bot = Bot(token, parse_mode="HTML", session=session)
-    storage = MemoryStorage() if not arguments.redis else RedisStorage.from_url(arguments.redis)
-    dp = Dispatcher(storage=storage)
-
-    register_all(dp, config, sessionmanager)
+    client = Client("bot",
+                    no_updates=True,
+                    api_id=2040,
+                    api_hash="b18441a1ff607e10a989891a5462e627",
+                    bot_token=token)
+    register_all(config, sessionmanager, bot, client)
 
     await set_bot_commands(bot)
 
     try:
+        await client.start()
         await dp.start_polling(bot)
     finally:
         await storage.close()

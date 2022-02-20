@@ -1,3 +1,3 @@
-def register(dp, config, sessionmanager):
+def register(config, sessionmanager, bot, client):
     from . import f
-    f.register(dp, config, sessionmanager)
+    f.register(config, sessionmanager, bot, client)

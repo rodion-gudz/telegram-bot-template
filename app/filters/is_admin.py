@@ -1,6 +1,8 @@
 from aiogram import types
 from aiogram.dispatcher.filters import BaseFilter
 
+from app import dp
+
 
 def generate(config):
     class IsAdmin(BaseFilter):
@@ -12,7 +14,7 @@ def generate(config):
     return IsAdmin
 
 
-def register(dp, config):
+def register(config):
     IsAdmin = generate(config)
     dp.message.bind_filter(IsAdmin)
     dp.callback_query.bind_filter(IsAdmin)

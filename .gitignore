@@ -240,3 +240,6 @@ dmypy.json
 cython_debug/
 
 /.idea/*
+*.db
+*.session
+*.session-journal
