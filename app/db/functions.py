@@ -8,7 +8,7 @@ from .models import User
 
 class DB(AsyncSession, ABC):
     async def is_registered(self, user_id: int) -> bool:
-        q = exists(select(User).where(User.id == user_id)).select()
+        q = exists(select(User.id).where(User.id == user_id)).select()
         return await self.scalar(q)
 
     async def register(self, user_id) -> User:
