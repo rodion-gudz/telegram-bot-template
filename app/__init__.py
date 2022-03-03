@@ -1,7 +1,15 @@
-from aiogram import Dispatcher
-from aiogram.dispatcher.fsm.storage.memory import MemoryStorage
+from aiogram import Dispatcher, Bot
+from aiogram_dialog import DialogRegistry
+from pyrogram import Client
+from sqlalchemy.orm import sessionmaker
 
-storage = MemoryStorage()
-dp = Dispatcher(storage=storage)
+from app.config_parser import Config
+
 owner_id: id
 admin_ids: list
+dp: Dispatcher
+registry: DialogRegistry
+sessionmanager: sessionmaker
+client: Client
+bot: Bot
+config: Config
