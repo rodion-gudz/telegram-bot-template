@@ -4,7 +4,7 @@ from aiogram import BaseMiddleware
 from aiogram.types import Update
 from cachetools import TTLCache
 
-from app import THROTTLING_RATE, config, dp
+from app import THROTTLING_RATE, dp
 
 cache = TTLCache(maxsize=10_000, ttl=THROTTLING_RATE)
 
