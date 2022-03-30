@@ -2,6 +2,7 @@ from abc import ABC
 
 from sqlalchemy import select, exists
 from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy.sql.functions import count, func
 
 from .models import User
 
@@ -16,3 +17,7 @@ class DB(AsyncSession, ABC):
         self.add(user)
         await self.commit()
         return user
+
+    async def get_users_count(self):
+        q = func.count(User.id)
+        return await self.scalar(q)
