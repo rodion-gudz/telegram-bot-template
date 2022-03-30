@@ -7,7 +7,6 @@ from aiogram_dialog.exceptions import UnknownIntent
 from aiogram_dialog.manager.protocols import ManagedDialogAdapterProto
 from aiogram_dialog.widgets.kbd import Button
 
-from app import dp
 from app.states.support import SupportDialog
 
 
@@ -21,7 +20,7 @@ async def get_data(dialog_manager: DialogManager, **kwargs):
 
 
 async def name_handler(
-        m: Message, dialog: ManagedDialogAdapterProto, manager: DialogManager
+    m: Message, dialog: ManagedDialogAdapterProto, manager: DialogManager
 ):
     manager.current_context().dialog_data["name"] = m.text
     await m.answer(f"Nice to meet you, {m.text}")
@@ -34,19 +33,17 @@ async def on_finish(c: CallbackQuery, button: Button, manager: DialogManager):
 
 
 async def on_age_changed(
-        c: ChatEvent, select: Any, manager: DialogManager, item_id: str
+    c: ChatEvent, select: Any, manager: DialogManager, item_id: str
 ):
     manager.current_context().dialog_data["age"] = item_id
     await manager.dialog().next()
 
 
 async def start(m: Message, dialog_manager: DialogManager):
-    # it is important to reset stack because user wants to restart everything
     await dialog_manager.start(SupportDialog.greeting, mode=StartMode.RESET_STACK)
 
 
 async def error_handler(update, exception, dialog_manager: DialogManager):
-    """Example of handling UnknownIntent Error and starting new dialog"""
     if isinstance(exception, UnknownIntent):
         await dialog_manager.start(SupportDialog.greeting, mode=StartMode.RESET_STACK)
     else:

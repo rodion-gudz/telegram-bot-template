@@ -3,7 +3,12 @@ from aiogram_dialog.widgets.input import MessageInput
 from aiogram_dialog.widgets.kbd import Button, Back, Row, Select, SwitchTo
 from aiogram_dialog.widgets.text import Const, Format, Multi
 
-from app.dialogs.handlers.support import name_handler, on_age_changed, get_data, on_finish
+from app.dialogs.handlers.support import (
+    name_handler,
+    on_age_changed,
+    get_data,
+    on_finish,
+)
 from app.states.support import SupportDialog
 
 ui = Dialog(

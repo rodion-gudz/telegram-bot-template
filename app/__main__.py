@@ -16,7 +16,14 @@ from aiohttp import web
 from pyrogram import Client
 
 import app
-from app import config, USE_PYROGRAM_CLIENT, API_ID, API_HASH, API_URL, DROP_PENDING_UPDATES
+from app import (
+    config,
+    USE_PYROGRAM_CLIENT,
+    API_ID,
+    API_HASH,
+    API_URL,
+    DROP_PENDING_UPDATES,
+)
 from app.ui.setup import set_bot_commands, remove_bot_commands
 from app.utils import db
 
