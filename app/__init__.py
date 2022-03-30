@@ -3,13 +3,13 @@ from aiogram_dialog import DialogRegistry
 from pyrogram import Client
 from sqlalchemy.orm import sessionmaker
 
-from app.config_parser import Config
+from .config import Config, parse_config
+from .const import *
 
 owner_id: id
-admin_ids: list
 dp: Dispatcher
 registry: DialogRegistry
 sessionmanager: sessionmaker
 client: Client
 bot: Bot
-config: Config
+config: Config = parse_config()
