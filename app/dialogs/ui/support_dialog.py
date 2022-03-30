@@ -1,47 +1,36 @@
 from aiogram_dialog import Dialog, Window
 from aiogram_dialog.widgets.input import MessageInput
-from aiogram_dialog.widgets.kbd import Button, Back, Row, Select, SwitchTo
-from aiogram_dialog.widgets.text import Const, Format, Multi
+from aiogram_dialog.widgets.kbd import Select, Column
+from aiogram_dialog.widgets.text import Const, Format
 
 from app.dialogs.handlers.support import (
-    name_handler,
-    on_age_changed,
-    get_data,
-    on_finish,
+    question_handler,
+    type_selected
 )
 from app.states.support import SupportDialog
 
 ui = Dialog(
     Window(
-        Const("Greetings! Please, introduce yourself:"),
-        MessageInput(name_handler),
+        Const("<b>📎 Напиши сообщение, которое нужно передать администратору</b>"),
+        MessageInput(question_handler),
         state=SupportDialog.greeting,
     ),
     Window(
-        Format("{name}! How old are you?"),
-        Select(
-            Format("{item}"),
-            items=["0-12", "12-18", "18-25", "25-40", "40+"],
-            item_id_getter=lambda x: x,
-            id="w_age",
-            on_click=on_age_changed,
+        Format("<b>📤 Выбери тип обращения</b>"),
+        Column(
+            Select(
+                Format("{item}"),
+                items=["🐛 Техническая проблема", "📩 Предложение", "❓ Общий вопрос"],
+                item_id_getter=lambda x: x,
+                id="type",
+                on_click=type_selected,
+            ),
         ),
-        state=SupportDialog.age,
-        getter=get_data,
-        preview_data={"name": "Tishka17"},
+        state=SupportDialog.select_type,
     ),
     Window(
-        Multi(
-            Format("{name}! Thank you for your answers."),
-            Const("Hope you are not smoking", when="can_smoke"),
-            sep="\n\n",
-        ),
-        Row(
-            Back(),
-            SwitchTo(Const("Restart"), id="restart", state=SupportDialog.greeting),
-            Button(Const("Finish"), on_click=on_finish, id="finish"),
-        ),
-        getter=get_data,
+        Const("<b>✅ Спасибо за обращение</b>"),
+        Const("Ваш вопрос передан администратору"),
         state=SupportDialog.finish,
     ),
 )
