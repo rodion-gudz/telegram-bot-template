@@ -1,5 +1,7 @@
 users_commands = {
-    "start": "Start bot",
+    "support": "Отправить обращение администратору",
+    "help": "Показать список команд",
+    "about": "Показать информацию о боте",
 }
 
 owner_commands = {

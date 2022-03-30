@@ -15,7 +15,7 @@ async def help_handler(message: Message):
         else users_commands.items()
     )
     for command, description in commands:
-        text += f"<b>/{command}</b> - {description} \n"
+        text += f"/{command} - <b>{description}</b> \n"
     await message.answer(text)
 
 
