@@ -3,8 +3,9 @@ from sqlalchemy.orm import sessionmaker
 
 
 async def init(database_engine: str):
-    from .base import Base
     from app.common import DB
+
+    from .base import Base
 
     engine = create_async_engine(database_engine, future=True)
     async with engine.begin() as conn:
