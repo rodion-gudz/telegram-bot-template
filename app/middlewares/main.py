@@ -15,15 +15,15 @@ class MainMiddleware(BaseMiddleware):
         self.client = client
 
     async def __call__(
-            self,
-            handler: Callable[[Message, Dict[str, Any]], Awaitable[Any]],
-            event: Message,
-            data: Dict[str, Any]
+        self,
+        handler: Callable[[Message, Dict[str, Any]], Awaitable[Any]],
+        event: Message,
+        data: Dict[str, Any],
     ) -> Any:
         async with self.sessionmanager() as session:
             data["session"] = session
             data["f"] = FMT(db=session, config=self.config)
-            data["app"] = self.bot
+            data["bot"] = self.bot
             data["client"] = self.client
             await handler(event, data)
 

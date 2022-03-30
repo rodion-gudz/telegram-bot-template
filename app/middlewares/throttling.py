@@ -4,17 +4,17 @@ from aiogram import BaseMiddleware
 from aiogram.types import Update
 from cachetools import TTLCache
 
-from app import dp
+from app import dp, config, THROTTLING_RATE
 
-cache = TTLCache(maxsize=10_000, ttl=0.5)
+cache = TTLCache(maxsize=10_000, ttl=THROTTLING_RATE)
 
 
 class ThrottlingMiddleware(BaseMiddleware):
     async def __call__(
-            self,
-            handler: Callable[[Update, Dict[str, Any]], Awaitable[Any]],
-            event: Update,
-            data: Dict[str, Any],
+        self,
+        handler: Callable[[Update, Dict[str, Any]], Awaitable[Any]],
+        event: Update,
+        data: Dict[str, Any],
     ) -> Any:
         if event.chat.id in cache:
             return
