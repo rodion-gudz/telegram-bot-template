@@ -18,8 +18,7 @@ class ThrottlingMiddleware(BaseMiddleware):
     ) -> Any:
         if event.chat.id in cache:
             return
-        else:
-            cache[event.chat.id] = None
+        cache[event.chat.id] = None
         return await handler(event, data)
 
 
