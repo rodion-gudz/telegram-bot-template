@@ -3,82 +3,107 @@ import asyncio
 import logging
 
 import coloredlogs
-from aiogram import Bot, types, Dispatcher
+from aiogram import Bot, Dispatcher
 from aiogram.client.session.aiohttp import AiohttpSession
 from aiogram.client.telegram import TelegramAPIServer
 from aiogram.dispatcher.fsm.storage.memory import MemoryStorage
+from aiogram.dispatcher.webhook.aiohttp_server import (
+    SimpleRequestHandler,
+    setup_application,
+)
 from aiogram_dialog import DialogRegistry
+from aiohttp import web
 from pyrogram import Client
 
 import app
-from app import db
-from app.config_parser import parse_config
+from app import config, USE_PYROGRAM_CLIENT, API_ID, API_HASH, API_URL, DROP_PENDING_UPDATES
+from app.ui.setup import set_bot_commands, remove_bot_commands
+from app.utils import db
 
 
 def parse_arguments():
     parser = argparse.ArgumentParser(description="Process app configuration.")
-    parser.add_argument("--config", "-c", type=str, help="configuration file", default="config.toml")
     parser.add_argument("--test", "-t", help="test bot token", action="store_true")
-    parser.add_argument("--pyrogram", "-p", help="activate pyrogram session", action="store_true")
-    parser.add_argument("--redis", "-r", type=str, help="use redis storage", default=False)
-
     return parser.parse_args()
 
 
-async def set_bot_commands(bot: Bot):
-    commands = [
-        types.BotCommand(command="start", description="just start")
-    ]
-    await bot.set_my_commands(commands, scope=types.BotCommandScopeDefault())
+async def on_startup(dispatcher: Dispatcher, bot: Bot):
+    # noinspection PyUnresolvedReferences
+    from app import filters, middlewares, handlers, dialogs, inline
+
+    await set_bot_commands(app.bot)
+    if config.webhook.use_webhook:
+        await bot.set_webhook(
+            f"{config.webhook.BASE_URL}{config.webhook.MAIN_BOT_PATH}",
+            drop_pending_updates=DROP_PENDING_UPDATES,
+        )
+    else:
+        await bot.delete_webhook(
+            drop_pending_updates=DROP_PENDING_UPDATES,
+        )
 
 
-# noinspection PyUnresolvedReferences
-def register_all():
-    from app import filters, middlewares, handlers, dialogs
+async def on_shutdown(dispatcher: Dispatcher, bot: Bot):
+    logging.warning("Stopping bot...")
+    await remove_bot_commands(bot)
+    await bot.delete_webhook(drop_pending_updates=True)
+    await dispatcher.fsm.storage.close()
+    await app.bot.session.close()
 
 
 async def main():
     coloredlogs.install()
-    logging.basicConfig(
-        level=logging.INFO,
-        format="%(asctime)s | %(levelname)s | %(name)s | %(message)s",
-        datefmt='%Y-%m-%d|%H:%M:%S',
-    )
+    logging.warning("Starting bot...")
 
     arguments = parse_arguments()
-    app.config = parse_config(arguments.config)
-    app.owner_id = app.config.owner_id
-    app.admin_ids = app.config.admin_ids
+    app.owner_id = app.config.bot.owner
 
-    app.sessionmanager = await db.init(app.config.engine)
+    app.sessionmanager = await db.init(config.database.engine)
 
-    session = AiohttpSession(api=TelegramAPIServer.from_base(app.config.api))
-    token = app.config.test_token if arguments.test else app.config.token
-    app.bot = Bot(token, parse_mode="HTML", session=session)
+    session = AiohttpSession(api=TelegramAPIServer.from_base(API_URL))
+    token = config.bot.test_token if arguments.test else config.bot.token
+    bot_settings = {"session": session, "parse_mode": "HTML"}
+    app.bot = Bot(token, **bot_settings)
+    bot_info = await app.bot.get_me()
+    logging.info(f"Name - {bot_info.full_name}")
+    logging.info(f"Username - @{bot_info.username}")
+    logging.info(f"ID - {bot_info.id}")
     storage = MemoryStorage()
     app.dp = Dispatcher(storage=storage)
+    app.dp.startup.register(on_startup)
+    app.dp.shutdown.register(on_shutdown)
     app.registry = DialogRegistry(app.dp)
-    app.client = Client("app",
-                        no_updates=True,
-                        parse_mode="HTML",
-                        api_id=2040,
-                        api_hash="b18441a1ff607e10a989891a5462e627",
-                        bot_token=token,
-                        workdir='../')
-    register_all()
+    app.client = Client(
+        "app",
+        no_updates=True,
+        parse_mode="HTML",
+        api_id=API_ID,
+        api_hash=API_HASH,
+        bot_token=token,
+        workdir="../",
+    )
 
-    await set_bot_commands(app.bot)
-
-    try:
-        if arguments.pyrogram:
-            await app.client.start()
+    if USE_PYROGRAM_CLIENT:
+        await app.client.start()
+    if config.webhook.use_webhook:
+        web_app = web.Application()
+        SimpleRequestHandler(dispatcher=app.dp, bot=app.bot).register(
+            web_app, path=config.webhook.MAIN_BOT_PATH
+        )
+        setup_application(web_app, app.dp, bot=app.bot)
+        await web._run_app(
+            web_app,
+            host=config.webhook.WEB_SERVER_HOST,
+            port=config.webhook.WEB_SERVER_PORT,
+            access_log=None,
+            print=lambda x: logging.error("Bot started!"),
+        )
+    else:
         await app.dp.start_polling(app.bot)
-    finally:
-        await storage.close()
-        await app.bot.session.close()
+        logging.error("Bot started!")
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     try:
         asyncio.run(main())
     except (KeyboardInterrupt, SystemExit):

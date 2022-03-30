@@ -1,8 +1,8 @@
 """There is some needed objects and types"""
 from dataclasses import dataclass
 
-from app.config_parser import Config
-from app.db.functions import DB
+from app.config import Config
+from app.utils.db.functions import DB
 
 
 @dataclass
