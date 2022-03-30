@@ -1,5 +1,5 @@
 from aiogram import Bot
-from aiogram.types import BotCommandScopeDefault, BotCommand, BotCommandScopeChat
+from aiogram.types import BotCommand, BotCommandScopeChat, BotCommandScopeDefault
 
 import app
 from app.ui.commands import owner_commands, users_commands

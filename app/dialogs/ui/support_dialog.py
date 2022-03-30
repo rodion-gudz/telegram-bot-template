@@ -1,12 +1,9 @@
 from aiogram_dialog import Dialog, Window
 from aiogram_dialog.widgets.input import MessageInput
-from aiogram_dialog.widgets.kbd import Select, Column
+from aiogram_dialog.widgets.kbd import Column, Select
 from aiogram_dialog.widgets.text import Const, Format
 
-from app.dialogs.handlers.support import (
-    question_handler,
-    type_selected
-)
+from app.dialogs.handlers.support import question_handler, type_selected
 from app.states.support import SupportDialog
 
 ui = Dialog(
@@ -20,7 +17,8 @@ ui = Dialog(
         Column(
             Select(
                 Format("{item}"),
-                items=["🐛 Техническая проблема", "📩 Предложение", "❓ Общий вопрос"],
+                items=["🐛 Техническая проблема",
+                       "📩 Предложение", "❓ Общий вопрос"],
                 item_id_getter=lambda x: x,
                 id="type",
                 on_click=type_selected,

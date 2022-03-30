@@ -17,26 +17,27 @@ from pyrogram import Client
 
 import app
 from app import (
-    config,
-    USE_PYROGRAM_CLIENT,
-    API_ID,
     API_HASH,
+    API_ID,
     API_URL,
     DROP_PENDING_UPDATES,
+    USE_PYROGRAM_CLIENT,
+    config,
 )
-from app.ui.setup import set_bot_commands, remove_bot_commands
+from app.ui.setup import remove_bot_commands, set_bot_commands
 from app.utils import db
 
 
 def parse_arguments():
     parser = argparse.ArgumentParser(description="Process app configuration.")
-    parser.add_argument("--test", "-t", help="test bot token", action="store_true")
+    parser.add_argument(
+        "--test", "-t", help="test bot token", action="store_true")
     return parser.parse_args()
 
 
 async def on_startup(dispatcher: Dispatcher, bot: Bot):
     # noinspection PyUnresolvedReferences
-    from app import filters, middlewares, handlers, dialogs, inline
+    from app import dialogs, filters, handlers, inline, middlewares
 
     await set_bot_commands(app.bot)
     if config.webhook.use_webhook:

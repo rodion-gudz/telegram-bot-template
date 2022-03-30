@@ -1,9 +1,9 @@
-from typing import Callable, Dict, Any, Awaitable
+from typing import Any, Awaitable, Callable, Dict
 
 from aiogram import BaseMiddleware
 from aiogram.types import Message
 
-from app import dp, config, sessionmanager, bot, client
+from app import bot, client, config, dp, sessionmanager
 from app.common import FMT
 
 

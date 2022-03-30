@@ -1,6 +1,6 @@
 from abc import ABC
 
-from sqlalchemy import select, exists
+from sqlalchemy import exists, select
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.sql.functions import count, func
 
