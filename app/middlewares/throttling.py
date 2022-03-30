@@ -1,10 +1,10 @@
-from typing import Callable, Dict, Any, Awaitable
+from typing import Any, Awaitable, Callable, Dict
 
 from aiogram import BaseMiddleware
 from aiogram.types import Update
 from cachetools import TTLCache
 
-from app import dp, config, THROTTLING_RATE
+from app import THROTTLING_RATE, dp
 
 cache = TTLCache(maxsize=10_000, ttl=THROTTLING_RATE)
 
@@ -18,8 +18,7 @@ class ThrottlingMiddleware(BaseMiddleware):
     ) -> Any:
         if event.chat.id in cache:
             return
-        else:
-            cache[event.chat.id] = None
+        cache[event.chat.id] = None
         return await handler(event, data)
 
 

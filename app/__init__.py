@@ -1,4 +1,4 @@
-from aiogram import Dispatcher, Bot
+from aiogram import Bot, Dispatcher
 from aiogram_dialog import DialogRegistry
 from pyrogram import Client
 from sqlalchemy.orm import sessionmaker

@@ -3,7 +3,7 @@ from aiogram.types import Message
 
 from app import dp, owner_id
 from app.keyboards.inline.author_keyboard import get_author_keyboard
-from app.ui.commands import users_commands, owner_commands
+from app.ui.commands import owner_commands, users_commands
 
 
 @dp.message(commands="help")

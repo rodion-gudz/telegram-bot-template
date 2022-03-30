@@ -12,7 +12,8 @@ def parse_config() -> Config:
     config_file = "config.toml"
 
     if not os.path.isfile(config_file):
-        raise FileNotFoundError(f"Config file not found: {config_file} no such file")
+        raise FileNotFoundError(
+            f"Config file not found: {config_file} no such file")
 
     with open(config_file, "r") as f:
         data = toml.load(f)

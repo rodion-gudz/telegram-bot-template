@@ -1,4 +1,4 @@
-from aiogram.dispatcher.fsm.state import StatesGroup, State
+from aiogram.dispatcher.fsm.state import State, StatesGroup
 
 
 class SupportDialog(StatesGroup):
