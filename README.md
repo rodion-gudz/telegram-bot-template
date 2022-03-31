@@ -8,6 +8,8 @@
 ![CodeStyle](https://img.shields.io/badge/code%20style-black-black)
 ![PythonVersions](https://img.shields.io/pypi/pyversions/aiogram)
 
+## [Sample bot](https://t.me/sample_lav_bot)
+
 ## Features
 
 * ![aiogram 3](https://img.shields.io/badge/dev--3.x-aiogram-blue) as a main library
@@ -28,3 +30,6 @@
 * 🔑 Change bot settings in `config.toml`
 * 📎 Install requirements from `requirements.txt`
 * 🚀 Run bot via `python -m app`
+
+## Bots using this template
+👨🏻‍💻 You can [send](https://t.me/fast_geek) me a link to your bot repository and I will post it here.
