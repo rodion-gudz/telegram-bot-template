@@ -64,12 +64,12 @@ async def main():
     logging.warning("Starting bot...")
 
     arguments = parse_arguments()
-    app.owner_id = app.config.bot.owner
+    app.owner_id = app.config.bot.OWNER_ID
 
     app.sessionmanager = await db.init(config.database.engine)
 
     session = AiohttpSession(api=TelegramAPIServer.from_base(API_URL))
-    token = config.bot.test_token if arguments.test else config.bot.token
+    token = config.bot.TEST_TOKEN if arguments.test else config.bot.TOKEN
     bot_settings = {"session": session, "parse_mode": "HTML"}
     app.bot = Bot(token, **bot_settings)
     bot_info = await app.bot.get_me()
