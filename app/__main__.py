@@ -66,7 +66,7 @@ async def main():
     arguments = parse_arguments()
     app.owner_id = app.config.bot.OWNER_ID
 
-    app.sessionmanager = await db.init(config.database.engine)
+    app.sessionmanager = await db.init(config.database.ENGINE_UR)
 
     session = AiohttpSession(api=TelegramAPIServer.from_base(API_URL))
     token = config.bot.TEST_TOKEN if arguments.test else config.bot.TOKEN
