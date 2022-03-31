@@ -40,7 +40,7 @@ async def on_startup(dispatcher: Dispatcher, bot: Bot):
     from app import dialogs, filters, handlers, inline, middlewares
 
     await set_bot_commands(app.bot)
-    if config.webhook.use_webhook:
+    if config.bot.USE_WEBHOOK:
         await bot.set_webhook(
             f"{config.webhook.BASE_URL}{config.webhook.MAIN_BOT_PATH}",
             drop_pending_updates=DROP_PENDING_UPDATES,
@@ -66,7 +66,7 @@ async def main():
     arguments = parse_arguments()
     app.owner_id = app.config.bot.OWNER_ID
 
-    app.sessionmanager = await db.init(config.database.ENGINE_UR)
+    app.sessionmanager = await db.init(config.database.ENGINE_URL)
 
     session = AiohttpSession(api=TelegramAPIServer.from_base(API_URL))
     token = config.bot.TEST_TOKEN if arguments.test else config.bot.TOKEN
@@ -93,7 +93,7 @@ async def main():
 
     if USE_PYROGRAM_CLIENT:
         await app.client.start()
-    if config.webhook.use_webhook:
+    if config.bot.USE_WEBHOOK:
         web_app = web.Application()
         SimpleRequestHandler(dispatcher=app.dp, bot=app.bot).register(
             web_app, path=config.webhook.MAIN_BOT_PATH
