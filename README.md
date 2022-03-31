@@ -33,5 +33,3 @@
 
 ## Bots using this template
 👨🏻‍💻 You can [send](https://t.me/fast_geek) me a link to your bot repository and I will post it here.
-
-\#telegram-bot-template-by-lav
