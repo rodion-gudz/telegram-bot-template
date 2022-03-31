@@ -1,6 +1,7 @@
 [bot]
 TOKEN = "TOKEN"
 TEST_TOKEN = "TEST_TOKEN"
+API_URL = "https://api.telegram.org"
 OWNER_ID = 123
 USE_WEBHOOK = false
 

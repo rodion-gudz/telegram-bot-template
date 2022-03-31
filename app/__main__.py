@@ -19,7 +19,6 @@ import app
 from app import (
     API_HASH,
     API_ID,
-    API_URL,
     DROP_PENDING_UPDATES,
     USE_PYROGRAM_CLIENT,
     config,
@@ -68,7 +67,7 @@ async def main():
 
     app.sessionmanager = await db.init(config.database.ENGINE_URL)
 
-    session = AiohttpSession(api=TelegramAPIServer.from_base(API_URL))
+    session = AiohttpSession(api=TelegramAPIServer.from_base(config.bot.API_URL))
     token = config.bot.TEST_TOKEN if arguments.test else config.bot.TOKEN
     bot_settings = {"session": session, "parse_mode": "HTML"}
     app.bot = Bot(token, **bot_settings)
