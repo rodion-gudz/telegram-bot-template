@@ -249,3 +249,5 @@ cython_debug/
 /.idea/inspectionProfiles/profiles_settings.xml
 /.idea/inspectionProfiles/Project_Default.xml
 /.idea/telegram-bot-template.iml
+
+config.toml
