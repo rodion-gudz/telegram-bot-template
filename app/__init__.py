@@ -6,7 +6,7 @@ from sqlalchemy.orm import sessionmaker
 from .config import Config, parse_config
 from .const import *
 
-owner_id: id
+owner_id: int
 dp: Dispatcher
 registry: DialogRegistry
 sessionmanager: sessionmaker
