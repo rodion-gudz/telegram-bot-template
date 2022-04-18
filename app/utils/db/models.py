@@ -1,3 +1,4 @@
+# sourcery skip: avoid-builtin-shadow
 from sqlalchemy import BigInteger, Column
 
 from app.utils.db.base import Base
