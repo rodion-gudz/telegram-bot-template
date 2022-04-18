@@ -7,7 +7,7 @@ from aiogram import Bot, Dispatcher
 from aiogram.client.session.aiohttp import AiohttpSession
 from aiogram.client.telegram import TelegramAPIServer
 from aiogram.dispatcher.fsm.storage.memory import MemoryStorage
-from aiogram.dispatcher.fsm.storage.redis import RedisStorage, DefaultKeyBuilder
+from aiogram.dispatcher.fsm.storage.redis import DefaultKeyBuilder, RedisStorage
 from aiogram.dispatcher.webhook.aiohttp_server import (
     SimpleRequestHandler,
     setup_application,
@@ -49,12 +49,13 @@ async def on_startup(dispatcher: Dispatcher, bot: Bot):
     logging.info(f"ID - {bot_info.id}")
 
     states = {
-        True: 'Enabled',
-        False: 'Disabled',
+        True: "Enabled",
+        False: "Disabled",
     }
 
     logging.debug(f"Groups Mode - {states[bot_info.can_join_groups]}")
-    logging.debug(f"Privacy Mode - {states[not bot_info.can_read_all_group_messages]}")
+    logging.debug(
+        f"Privacy Mode - {states[not bot_info.can_read_all_group_messages]}")
     logging.debug(f"Inline Mode - {states[bot_info.supports_inline_queries]}")
 
     logging.error("Bot started!")
@@ -75,12 +76,15 @@ async def main():
 
     app.owner_id = app.config.settings.owner_id
 
-    db_url = config.database.test_database_url if app.arguments.test else config.database.database_url
+    db_url = (
+        config.database.test_database_url
+        if app.arguments.test
+        else config.database.database_url
+    )
     app.sessionmanager = await db.init(db_url)
 
     session = AiohttpSession(
-        api=TelegramAPIServer.from_base(config.api.bot_api_url)
-    )
+        api=TelegramAPIServer.from_base(config.api.bot_api_url))
     token = config.bot.test_token if app.arguments.test else config.bot.token
     bot_settings = {"session": session, "parse_mode": "HTML"}
     app.bot = Bot(token, **bot_settings)
