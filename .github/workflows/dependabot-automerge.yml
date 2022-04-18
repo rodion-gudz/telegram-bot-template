@@ -10,7 +10,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
         with:
-            github-token: ${{ secrets.GH_TOKEN }}
+          github-token: ${{ secrets.GH_TOKEN }}
       - uses: ahmadnassri/action-dependabot-auto-merge@v2
         with:
           target: minor
