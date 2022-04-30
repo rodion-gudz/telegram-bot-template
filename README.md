@@ -33,4 +33,5 @@
 
 ## Bots using this template
 * [HueRtx/tgbot](https://github.com/HueRtx/tgbot) - simple weather bot with some other features
+
 👨🏻‍💻 You can [send](https://t.me/fast_geek) me a link to your bot repository and I will post it here.
