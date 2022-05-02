@@ -102,7 +102,7 @@ async def main():
     app.dp.shutdown.register(on_shutdown)
     app.registry = DialogRegistry(app.dp)
     app.client = Client(
-        session_name="app",
+        name="app",
         no_updates=True,
         parse_mode="HTML",
         api_id=config.api.id,
