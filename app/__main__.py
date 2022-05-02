@@ -104,7 +104,7 @@ async def main():
     app.client = Client(
         name="app",
         no_updates=True,
-        parse_mode="HTML",
+        in_memory=True,
         api_id=config.api.id,
         api_hash=config.api.hash,
         bot_token=token,
