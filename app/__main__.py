@@ -29,18 +29,15 @@ async def on_startup(dispatcher: Dispatcher, bot: Bot):
     await set_bot_commands(app.bot)
     if config.settings.use_webhook and not app.arguments.test:
         webhook_url = (
-            config.webhook.url + config.webhook.path
-            if config.webhook.url
-            else f"http://localhost:{config.webhook.port}{config.webhook.path}"
-        )
+            config.webhook.url + config.webhook.path if config.webhook.url else
+            f"http://localhost:{config.webhook.port}{config.webhook.path}")
         await bot.set_webhook(
             webhook_url,
             drop_pending_updates=config.settings.drop_pending_updates,
         )
     else:
         await bot.delete_webhook(
-            drop_pending_updates=config.settings.drop_pending_updates,
-        )
+            drop_pending_updates=config.settings.drop_pending_updates, )
 
     bot_info = await app.bot.get_me()
 
@@ -64,7 +61,8 @@ async def on_startup(dispatcher: Dispatcher, bot: Bot):
 async def on_shutdown(dispatcher: Dispatcher, bot: Bot):
     logging.warning("Stopping bot...")
     await remove_bot_commands(bot)
-    await bot.delete_webhook(drop_pending_updates=config.settings.drop_pending_updates)
+    await bot.delete_webhook(
+        drop_pending_updates=config.settings.drop_pending_updates)
     await dispatcher.fsm.storage.close()
     await app.bot.session.close()
 
@@ -76,11 +74,8 @@ async def main():
 
     app.owner_id = app.config.settings.owner_id
 
-    db_url = (
-        config.database.test_database_url
-        if app.arguments.test
-        else config.database.database_url
-    )
+    db_url = (config.database.test_database_url
+              if app.arguments.test else config.database.database_url)
     app.sessionmanager = await db.init(db_url)
 
     session = AiohttpSession(
@@ -115,9 +110,9 @@ async def main():
         await app.client.start()
     if config.settings.use_webhook and not app.arguments.test:
         web_app = web.Application()
-        SimpleRequestHandler(dispatcher=app.dp, bot=app.bot).register(
-            web_app, path=config.webhook.path
-        )
+        SimpleRequestHandler(dispatcher=app.dp,
+                             bot=app.bot).register(web_app,
+                                                   path=config.webhook.path)
         setup_application(web_app, app.dp, bot=app.bot)
         # noinspection PyProtectedMember
         await web._run_app(
