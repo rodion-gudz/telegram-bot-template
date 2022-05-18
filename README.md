@@ -27,7 +27,7 @@
 ## Usage
 
 * 📌 [Create](https://github.com/fast-geek/telegram-bot-template/generate) and clone repo from this template
-* 🔑 Change bot settings in `config.toml`
+* 🔑 Rename `example.toml` to `config.toml` and change bot settings
 * 📎 Install requirements from `requirements.txt`
 * 🚀 Run bot via `python -m app`
 
