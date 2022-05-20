@@ -2,7 +2,7 @@ from aiogram import Bot
 from aiogram.types import Message
 
 from app import dp, owner_id
-from app.keyboards.inline.author_keyboard import get_author_keyboard
+from app.keyboards.inline import get_author_keyboard
 from app.ui.commands import owner_commands, users_commands
 
 
