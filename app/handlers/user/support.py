@@ -2,7 +2,7 @@ from aiogram.types import Message
 from aiogram_dialog import DialogManager
 
 from app import dp
-from app.states.support import SupportDialog
+from app.states import SupportDialog
 
 
 @dp.message(commands="support")

@@ -1,17 +1,15 @@
-from aiogram_dialog import Dialog, Window
-from aiogram_dialog.widgets.input import MessageInput
-from aiogram_dialog.widgets.kbd import Column, Select
-from aiogram_dialog.widgets.text import Const, Format
-
-from app.states.support import SupportDialog
-
 from typing import Any
 
 from aiogram.types import Message
 from aiogram_dialog import ChatEvent, DialogManager
+from aiogram_dialog import Dialog, Window
 from aiogram_dialog.manager.protocols import ManagedDialogAdapterProto
+from aiogram_dialog.widgets.input import MessageInput
+from aiogram_dialog.widgets.kbd import Column, Select
+from aiogram_dialog.widgets.text import Const, Format
 
 from app import bot, owner_id
+from app.states import SupportDialog
 
 
 async def question_handler(
@@ -30,10 +28,15 @@ async def type_selected(
         text="<b>⚠️ Новое обращение</b> \n\n"
              f"<b>Пользователь</b> - <a href='tg://user?id={user.id}'>{user.full_name}</a> \n"
              f"<b>Тип</b> - {question_type} \n"
-             f"<b>Сообщение</b> - <code>{manager.current_context().dialog_data['question']}</code>",
+             f"<b>Сообщение</b> - <code>{manager.current_context().dialog_data['question']}</code>"
+             f"<pre><code class='language-{user.id}-{c.message.message_id}'>ㅤ</code></pre>",
     )
-
-    await manager.dialog().next()
+    await bot.send_message(
+        chat_id=user.id,
+        text="<b>✅ Спасибо за обращение</b> \n"
+             "Ваш вопрос передан администратору"
+    )
+    await manager.done()
 
 
 ui = Dialog(
@@ -55,10 +58,5 @@ ui = Dialog(
             ),
         ),
         state=SupportDialog.select_type,
-    ),
-    Window(
-        Const("<b>✅ Спасибо за обращение</b>"),
-        Const("Ваш вопрос передан администратору"),
-        state=SupportDialog.finish,
     ),
 )
