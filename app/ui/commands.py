@@ -13,6 +13,7 @@ owner_commands = {
     "ping": "Check bot ping",
     "stats": "Show bot stats",
 }
+owner_commands.update(users_commands)
 
 
 async def set_bot_commands(bot: Bot):
