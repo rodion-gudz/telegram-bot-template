@@ -1,11 +1,10 @@
-from aiogram import Bot, F
-from aiogram.types import Message, ContentType
+from aiogram import Bot
+from aiogram.types import Message
 
 from app import dp, owner_id
-from app.ui.commands import owner_commands
 
 
-@dp.message(~(F.text.in_(owner_commands)), is_owner=True)
+@dp.message(is_owner=True)
 async def question_handler(message: Message, bot: Bot):
     reply_message = message.reply_to_message
 
