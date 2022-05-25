@@ -33,5 +33,6 @@
 
 ## Bots using this template
 * [HueRtx/tgbot](https://github.com/HueRtx/tgbot) - simple weather bot with some other features
+* [AYLMS/LyceumBot](https://github.com/AYLMS/LyceumBot) - bot for Yandex LMS with notifications and stats
 
 👨🏻‍💻 You can [send](https://t.me/fast_geek) me a link to your bot repository and I will post it here.
