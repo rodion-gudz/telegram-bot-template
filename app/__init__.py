@@ -10,8 +10,7 @@ from .config import Config, parse_config
 
 def parse_arguments():
     parser = argparse.ArgumentParser(description="Process app configuration.")
-    parser.add_argument(
-        "--test", "-t", help="test bot token", action="store_true")
+    parser.add_argument("--test", "-t", help="test bot token", action="store_true")
     return parser.parse_args()
 
 
