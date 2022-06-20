@@ -1,4 +1,4 @@
-aiogram-dialog==2.0.0b3
+aiogram-dialog==2.0.0b4
 aiogram==3.0.0b3
 aioredis==2.0.1
 aiosqlite==0.17.0
