@@ -5,7 +5,7 @@ aiosqlite==0.17.0
 cachetools==4.2.4
 coloredlogs==15.0.1
 pyrogram==2.0.35
-sqlalchemy==1.4.39
+sqlalchemy==1.4.40
 tgcrypto==1.2.3
 toml==0.10.2
 aiohttp==3.8.1
