@@ -27,7 +27,7 @@ async def on_startup(dispatcher: Dispatcher, bot: Bot):
     from app import dialogs, filters, handlers, inline, middlewares
 
     await set_bot_commands(app.bot)
-    if config.settings.use_webhook and not app.arguments.test:
+    if config.settings.use_webhook:
         webhook_url = (
             config.webhook.url + config.webhook.path
             if config.webhook.url
@@ -69,25 +69,21 @@ async def on_shutdown(dispatcher: Dispatcher, bot: Bot):
 
 
 async def main():
-    logging_level = logging.DEBUG if app.arguments.test else logging.INFO
+    logging_level = logging.INFO
     coloredlogs.install(level=logging_level)
     logging.warning("Starting bot...")
 
     app.owner_id = app.config.settings.owner_id
 
-    db_url = (
-        config.database.test_database_url
-        if app.arguments.test
-        else config.database.database_url
-    )
+    db_url = config.database.database_url
     app.sessionmanager = await db.init(db_url)
 
     session = AiohttpSession(api=TelegramAPIServer.from_base(config.api.bot_api_url))
-    token = config.bot.test_token if app.arguments.test else config.bot.token
+    token = config.bot.token
     bot_settings = {"session": session, "parse_mode": "HTML"}
     app.bot = Bot(token, **bot_settings)
 
-    if config.storage.use_persistent_storage and not app.arguments.test:
+    if config.storage.use_persistent_storage:
         storage = RedisStorage(
             redis=aioredis.from_url(config.storage.redis_url),
             key_builder=DefaultKeyBuilder(with_destiny=True),
@@ -111,7 +107,7 @@ async def main():
 
     if config.settings.use_pyrogram_client:
         await app.client.start()
-    if config.settings.use_webhook and not app.arguments.test:
+    if config.settings.use_webhook:
         web_app = web.Application()
         SimpleRequestHandler(dispatcher=app.dp, bot=app.bot).register(
             web_app, path=config.webhook.path

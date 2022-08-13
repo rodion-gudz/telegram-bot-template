@@ -1,13 +1,11 @@
 [bot]
 token = "TOKEN"
-test_token = "TEST_TOKEN"
 
 [database]
 database_url = "sqlite+aiosqlite:///production-database.db"
-test_database_url = "sqlite+aiosqlite:///dev-database.db"
 
 [storage] # (Optional) Persistent FSM Storage for aiogram and aiogram_dialog, disabled by default
-use_persistent_storage = false # (Optional, disabled for test mode)
+use_persistent_storage = false # (Optional)
 # redis_url = "redis://user:password@host:port/db" # (Optional) Redis URL for FSM storage
 
 [webhook] # (Optional) Settings for Webhook, disabled by default
@@ -18,7 +16,7 @@ port = 1234
 [settings]
 owner_id = 123
 throttling_rate = 0.5
-use_webhook = false # (Optional, disabled for test mode)
+use_webhook = false # (Optional)
 use_pyrogram_client = false
 drop_pending_updates = false
 

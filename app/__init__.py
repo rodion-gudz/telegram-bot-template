@@ -10,7 +10,9 @@ from .config import Config, parse_config
 
 def parse_arguments():
     parser = argparse.ArgumentParser(description="Process app configuration.")
-    parser.add_argument("--test", "-t", help="test bot token", action="store_true")
+    parser.add_argument(
+        "--config", "-c", type=str, help="configuration file", default="config.toml"
+    )
     return parser.parse_args()
 
 
@@ -20,5 +22,5 @@ registry: DialogRegistry
 sessionmanager: sessionmaker
 client: Client
 bot: Bot
-config: Config = parse_config()
 arguments = parse_arguments()
+config: Config = parse_config(arguments.config)

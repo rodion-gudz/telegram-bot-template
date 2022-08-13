@@ -8,13 +8,11 @@ import toml
 @dataclass
 class ConfigBot:
     token: str
-    test_token: str
 
 
 @dataclass
 class ConfigDatabase:
     database_url: str
-    test_database_url: str
 
 
 @dataclass
@@ -78,8 +76,7 @@ class Config:
         return cls(**sections)
 
 
-def parse_config() -> Config:
-    config_file = "config.toml"
+def parse_config(config_file: str) -> Config:
     if not os.path.isfile(config_file) and not config_file.endswith(".toml"):
         config_file += ".toml"
 
