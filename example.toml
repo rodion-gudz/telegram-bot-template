@@ -2,7 +2,7 @@
 token = "TOKEN"
 
 [database]
-database_url = "sqlite+aiosqlite:///production-database.db"
+models = ["app.db.functions", "aerich.models"]
 
 [storage] # (Optional) Persistent FSM Storage for aiogram and aiogram_dialog, disabled by default
 use_persistent_storage = false # (Optional)

@@ -12,7 +12,29 @@ class ConfigBot:
 
 @dataclass
 class ConfigDatabase:
-    database_url: str
+    models: list[str]
+    protocol: str = "sqlite"
+    file_name: str = "production-database.sqlite3"
+    user: str = None
+    password: str = None
+    host: str = None
+    port: str = None
+
+    def get_db_url(self):
+        if self.protocol == "sqlite":
+            return f"{self.protocol}://{self.file_name}"
+        return f"{self.protocol}://{self.user}:{self.password}@{self.host}:{self.port}"
+
+    def get_tortoise_config(self):
+        return {
+            "connections": {"default": self.get_db_url()},
+            "apps": {
+                "models": {
+                    "models": self.models,
+                    "default_connection": "default",
+                },
+            },
+        }
 
 
 @dataclass
