@@ -17,10 +17,9 @@ from aiohttp import web
 from pyrogram import Client
 
 import app
-from app import config
-from app.db import init_orm, close_orm
+from app import config, db
+from app.db import close_orm, init_orm
 from app.ui.commands import remove_bot_commands, set_bot_commands
-from app import db
 
 
 async def on_startup(dispatcher: Dispatcher, bot: Bot):

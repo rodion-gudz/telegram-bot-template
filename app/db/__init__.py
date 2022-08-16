@@ -1,8 +1,9 @@
 import contextlib
+import logging
+
 from aerich import Command
 from click import Abort
 from tortoise import Tortoise
-import logging
 
 
 async def create_models(tortoise_config: dict):
