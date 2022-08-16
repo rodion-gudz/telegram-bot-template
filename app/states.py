@@ -1,6 +1,5 @@
 from aiogram.dispatcher.fsm.state import State, StatesGroup
 
 
-class SupportDialog(StatesGroup):
+class SampleDialog(StatesGroup):
     greeting = State()
-    select_type = State()

@@ -4,16 +4,12 @@ from aiogram.types import BotCommand, BotCommandScopeChat, BotCommandScopeDefaul
 import app
 
 users_commands = {
-    "support": "Отправить обращение администратору",
     "help": "Показать список команд",
     "about": "Показать информацию о боте",
+    "dialog": "Запустить тестовый диалог",
 }
 
-owner_commands = {
-    "ping": "Check bot ping",
-    "stats": "Show bot stats",
-}
-owner_commands.update(users_commands)
+owner_commands = {"ping": "Check bot ping", "stats": "Show bot stats"} | users_commands
 
 
 async def set_bot_commands(bot: Bot):
