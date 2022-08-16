@@ -3,8 +3,8 @@
 ### Useful and multifunction bot template, which use aiogram and pyrogram libraries
 
 ![Telegram](https://img.shields.io/badge/Telegram-blue?style=flat&logo=telegram)
-[![DeepSource](https://deepsource.io/gh/fast-geek/telegram-bot-template.svg/?label=resolved+issues&token=xT19E0s_Ut8tM94CcpLA9exx)](https://deepsource.io/gh/fast-geek/telegram-bot-template/?ref=repository-badge)
-[![CodeFactor](https://www.codefactor.io/repository/github/fast-geek/telegram-bot-template/badge?s=5c628f092285245c2cbab683d2509317bcca48c9)](https://www.codefactor.io/repository/github/fast-geek/telegram-bot-template)
+[![DeepSource](https://deepsource.io/gh/rodion-gudz/telegram-bot-template.svg/?label=resolved+issues&token=xT19E0s_Ut8tM94CcpLA9exx)](https://deepsource.io/gh/rodion-gudz/telegram-bot-template/?ref=repository-badge)
+[![CodeFactor](https://www.codefactor.io/repository/github/rodion-gudz/telegram-bot-template/badge?s=5c628f092285245c2cbab683d2509317bcca48c9)](https://www.codefactor.io/repository/github/rodion-gudz/telegram-bot-template)
 ![CodeStyle](https://img.shields.io/badge/code%20style-black-black)
 ![PythonVersions](https://img.shields.io/pypi/pyversions/aiogram)
 
@@ -26,7 +26,7 @@
 
 ## Usage
 
-* 📌 [Create](https://github.com/fast-geek/telegram-bot-template/generate) and clone repo from this template
+* 📌 [Create](https://github.com/rodion-gudz/telegram-bot-template/generate) and clone repo from this template
 * 🔑 Rename `example.toml` to `config.toml` and change bot settings
 * 📎 Install requirements from `requirements.txt`
 * 🚀 Run bot via `python -m app`
