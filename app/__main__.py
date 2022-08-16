@@ -18,8 +18,9 @@ from pyrogram import Client
 
 import app
 from app import config
+from app.db import init_orm, close_orm
 from app.ui.commands import remove_bot_commands, set_bot_commands
-from app.utils import db
+from app import db
 
 
 async def on_startup(dispatcher: Dispatcher, bot: Bot):
@@ -41,6 +42,9 @@ async def on_startup(dispatcher: Dispatcher, bot: Bot):
         await bot.delete_webhook(
             drop_pending_updates=config.settings.drop_pending_updates,
         )
+
+    tortoise_config = config.database.get_tortoise_config()
+    await init_orm(tortoise_config)
 
     bot_info = await app.bot.get_me()
 
@@ -66,6 +70,7 @@ async def on_shutdown(dispatcher: Dispatcher, bot: Bot):
     await bot.delete_webhook(drop_pending_updates=config.settings.drop_pending_updates)
     await dispatcher.fsm.storage.close()
     await app.bot.session.close()
+    await close_orm()
 
 
 async def main():
@@ -75,8 +80,11 @@ async def main():
 
     app.owner_id = app.config.settings.owner_id
 
-    db_url = config.database.database_url
-    app.sessionmanager = await db.init(db_url)
+    tortoise_config = config.database.get_tortoise_config()
+    try:
+        await db.create_models(tortoise_config)
+    except FileExistsError:
+        await db.migrate_models(tortoise_config)
 
     session = AiohttpSession(api=TelegramAPIServer.from_base(config.api.bot_api_url))
     token = config.bot.token
