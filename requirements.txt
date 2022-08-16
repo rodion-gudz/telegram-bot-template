@@ -10,3 +10,5 @@ tgcrypto
 toml
 aiohttp
 redis
+aerich
+tortoise-orm
