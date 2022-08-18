@@ -9,7 +9,7 @@ users_commands = {
     "dialog": "Запустить тестовый диалог",
 }
 
-owner_commands = {"ping": "Check bot ping", "stats": "Show bot stats"} | users_commands
+owner_commands = {**users_commands, "ping": "Check bot ping", "stats": "Show bot stats"}
 
 
 async def set_bot_commands(bot: Bot):
