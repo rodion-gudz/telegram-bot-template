@@ -7,7 +7,7 @@ from app.states import SampleDialog
 
 
 async def show_alert(c: CallbackQuery, button: Button, manager: DialogManager):
-    await c.answer("❗️ Тестовые уведомление", show_alert=True, cache_time=0)
+    await c.answer("❗️ Тестовое уведомление", show_alert=True, cache_time=0)
     await c.message.delete()
     await manager.done()
 
