@@ -1,10 +1,10 @@
-aiogram-dialog==2.0.0b6
-aiogram==3.0.0b3
+aiogram-dialog==2.0.0b9
+aiogram==3.0.0b4
 aioredis
 aiosqlite
 cachetools
 coloredlogs
-pyrogram
+pyrogram>=2.0.0
 sqlalchemy[asyncio]
 tgcrypto
 toml

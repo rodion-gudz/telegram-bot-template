@@ -1,5 +1,5 @@
 from aiogram import types
-from aiogram.dispatcher.filters import BaseFilter
+from aiogram.filters import BaseFilter
 
 from app import owner_id
 

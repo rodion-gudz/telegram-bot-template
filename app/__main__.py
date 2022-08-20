@@ -6,9 +6,9 @@ import coloredlogs
 from aiogram import Bot, Dispatcher
 from aiogram.client.session.aiohttp import AiohttpSession
 from aiogram.client.telegram import TelegramAPIServer
-from aiogram.dispatcher.fsm.storage.memory import MemoryStorage
-from aiogram.dispatcher.fsm.storage.redis import DefaultKeyBuilder, RedisStorage
-from aiogram.dispatcher.webhook.aiohttp_server import (
+from aiogram.fsm.storage.memory import MemoryStorage
+from aiogram.fsm.storage.redis import DefaultKeyBuilder, RedisStorage
+from aiogram.webhook.aiohttp_server import (
     SimpleRequestHandler,
     setup_application,
 )
