@@ -2,8 +2,8 @@ from aiogram import Router
 
 
 def get_handlers_router() -> Router:
-    from .user import get_user_router
     from .owner import get_owner_router
+    from .user import get_user_router
 
     router = Router()
 
