@@ -1,11 +1,11 @@
 from aiogram import types
 from aiogram.filters import BaseFilter
 
-from app import owner_id
+from app.config import Config
 
 
 class IsOwner(BaseFilter):
     is_owner: bool
 
-    async def __call__(self, message: types.Message) -> bool:
-        return self.is_owner is (message.from_user.id == owner_id)
+    async def __call__(self, message: types.Message, config: Config) -> bool:
+        return self.is_owner is (message.from_user.id == config.settings.owner_id)

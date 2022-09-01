@@ -13,17 +13,30 @@ from aiogram_dialog import DialogRegistry
 from aiohttp import web
 from pyrogram import Client
 
-import app
-from app import config, db
+from app import db
+from app.arguments import parse_arguments
+from app.config import parse_config, Config
 from app.db import close_orm, init_orm
-from app.ui.commands import remove_bot_commands, set_bot_commands
+from app.dialogs import register_dialogs
+from app.handlers import get_handlers_router
+from app.inline.handlers import get_inline_router
+from app.middlewares import register_middlewares
+from app.ui.commands import remove_bot_commands, setup_bot_commands
 
 
-async def on_startup(dispatcher: Dispatcher, bot: Bot):
-    # noinspection PyUnresolvedReferences
-    from app import dialogs, filters, handlers, inline, middlewares
+async def on_startup(
+    dispatcher: Dispatcher, bot: Bot, config: Config, registry: DialogRegistry
+):
 
-    await set_bot_commands(app.bot)
+    register_middlewares(dp=dispatcher, config=config)
+
+    dispatcher.include_router(get_handlers_router())
+    dispatcher.include_router(get_inline_router())
+
+    register_dialogs(registry)
+
+    await setup_bot_commands(bot, config)
+
     if config.settings.use_webhook:
         webhook_url = (
             config.webhook.url + config.webhook.path
@@ -42,7 +55,7 @@ async def on_startup(dispatcher: Dispatcher, bot: Bot):
     tortoise_config = config.database.get_tortoise_config()
     await init_orm(tortoise_config)
 
-    bot_info = await app.bot.get_me()
+    bot_info = await bot.get_me()
 
     logging.info(f"Name - {bot_info.full_name}")
     logging.info(f"Username - @{bot_info.username}")
@@ -60,12 +73,12 @@ async def on_startup(dispatcher: Dispatcher, bot: Bot):
     logging.error("Bot started!")
 
 
-async def on_shutdown(dispatcher: Dispatcher, bot: Bot):
+async def on_shutdown(dispatcher: Dispatcher, bot: Bot, config: Config):
     logging.warning("Stopping bot...")
-    await remove_bot_commands(bot)
+    await remove_bot_commands(bot, config)
     await bot.delete_webhook(drop_pending_updates=config.settings.drop_pending_updates)
     await dispatcher.fsm.storage.close()
-    await app.bot.session.close()
+    await bot.session.close()
     await close_orm()
 
 
@@ -74,7 +87,8 @@ async def main():
     coloredlogs.install(level=logging_level)
     logging.warning("Starting bot...")
 
-    app.owner_id = app.config.settings.owner_id
+    arguments = parse_arguments()
+    config = parse_config(arguments.config)
 
     tortoise_config = config.database.get_tortoise_config()
     try:
@@ -85,7 +99,8 @@ async def main():
     session = AiohttpSession(api=TelegramAPIServer.from_base(config.api.bot_api_url))
     token = config.bot.token
     bot_settings = {"session": session, "parse_mode": "HTML"}
-    app.bot = Bot(token, **bot_settings)
+
+    bot = Bot(token, **bot_settings)
 
     if config.storage.use_persistent_storage:
         storage = RedisStorage(
@@ -95,28 +110,33 @@ async def main():
     else:
         storage = MemoryStorage()
 
-    app.dp = Dispatcher(storage=storage)
-    app.dp.startup.register(on_startup)
-    app.dp.shutdown.register(on_shutdown)
-    app.registry = DialogRegistry(app.dp)
-    app.client = Client(
-        name="app",
-        no_updates=True,
-        in_memory=True,
-        api_id=config.api.id,
-        api_hash=config.api.hash,
-        bot_token=token,
-        workdir="../",
-    )
+    dp = Dispatcher(storage=storage)
+    dp.startup.register(on_startup)
+    dp.shutdown.register(on_shutdown)
+
+    registry = DialogRegistry(dp)
+
+    context_kwargs = {"config": config, "registry": registry}
 
     if config.settings.use_pyrogram_client:
-        await app.client.start()
+        pyrogram_client = Client(
+            name="bot",
+            no_updates=True,
+            in_memory=True,
+            api_id=config.api.id,
+            api_hash=config.api.hash,
+            bot_token=token,
+            workdir="../",
+        )
+        await pyrogram_client.start()
+        context_kwargs["client"] = pyrogram_client
+
     if config.settings.use_webhook:
         web_app = web.Application()
-        SimpleRequestHandler(dispatcher=app.dp, bot=app.bot).register(
+        SimpleRequestHandler(dispatcher=dp, bot=bot).register(
             web_app, path=config.webhook.path
         )
-        setup_application(web_app, app.dp, bot=app.bot)
+        setup_application(web_app, dp, bot=bot, **context_kwargs)
         # noinspection PyProtectedMember
         await web._run_app(
             app=web_app,
@@ -125,7 +145,7 @@ async def main():
             print=lambda msg: None,
         )
     else:
-        await app.dp.start_polling(app.bot)
+        await dp.start_polling(bot, **context_kwargs)
 
 
 if __name__ == "__main__":

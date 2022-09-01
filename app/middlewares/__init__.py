@@ -1,7 +1,9 @@
-import os
-from importlib import import_module
+from aiogram import Dispatcher
 
-for module in os.listdir(os.path.dirname(__file__)):
-    if module == "__init__.py" or module[-3:] != ".py":
-        continue
-    import_module(f".{module[:-3]}", __package__)
+from app.config import Config
+
+
+def register_middlewares(dp: Dispatcher, config: Config):
+    from . import throttling
+
+    throttling.register_middleware(dp=dp, config=config)

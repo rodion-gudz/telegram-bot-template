@@ -1,17 +1,19 @@
-from aiogram import Bot
+from aiogram import Bot, Router
 from aiogram.types import Message
 
-from app import dp, owner_id
+from app.config import Config
 from app.keyboards.inline import get_author_keyboard
 from app.ui.commands import owner_commands, users_commands
 
+router = Router()
 
-@dp.message(commands="help")
-async def help_handler(message: Message):
+
+@router.message(commands="help")
+async def help_handler(message: Message, config: Config):
     text = "ℹ️ <b>Список команд:</b> \n\n"
     commands = (
         owner_commands.items()
-        if message.from_user.id == owner_id
+        if message.from_user.id == config.settings.owner_id
         else users_commands.items()
     )
     for command, description in commands:
@@ -19,8 +21,8 @@ async def help_handler(message: Message):
     await message.answer(text)
 
 
-@dp.message(commands="about")
-async def about_handler(message: Message, bot: Bot):
+@router.message(commands="about")
+async def about_handler(message: Message, bot: Bot, config: Config):
     bot_information = await bot.get_me()
     text = (
         "<b>ℹ️ Информация о боте:</b> \n\n"
@@ -28,4 +30,6 @@ async def about_handler(message: Message, bot: Bot):
         f"<b>Username - </b> @{bot_information.username} \n"
         f"<b>ID - </b> <code>{bot_information.id}</code> \n"
     )
-    await message.answer(text, reply_markup=get_author_keyboard())
+    await message.answer(
+        text, reply_markup=get_author_keyboard(owner_id=config.settings.owner_id)
+    )

@@ -1,7 +1,10 @@
-import os
-from importlib import import_module
+from aiogram import Router
 
-for module in os.listdir(os.path.dirname(__file__)):
-    if module == "__init__.py" or module[-3:] != ".py":
-        continue
-    import_module(f".{module[:-3]}", __package__)
+
+def get_inline_router() -> Router:
+    from . import user_information
+
+    router = Router()
+    router.include_router(user_information.router)
+
+    return router

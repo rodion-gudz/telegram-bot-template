@@ -1,10 +1,13 @@
+from aiogram import Router
 from aiogram.types import Message
 
-from app import dp
 from app.db.functions import User
+from app.filters.is_owner import IsOwner
+
+router = Router()
 
 
-@dp.message(commands="stats", is_owner=True)
+@router.message(IsOwner(is_owner=True), commands="stats")
 async def stats_handler(message: Message):
     count = await User.get_count()
     await message.answer(

@@ -1,12 +1,14 @@
-from aiogram import Bot
+from aiogram import Bot, Router
 from aiogram.types import Message
 
-from app import dp
+from app.config import Config
 from app.db.functions import User
 
+router = Router()
 
-@dp.message(commands="start")
-async def cmd_start(message: Message, bot: Bot):
+
+@router.message(commands="start")
+async def cmd_start(message: Message, bot: Bot, config: Config):
     user_id = message.from_user.id
     bot_information = await bot.get_me()
     if not await User.is_registered(user_id):
