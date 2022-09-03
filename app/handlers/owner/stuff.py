@@ -1,6 +1,7 @@
 import time
 
 from aiogram import Router
+from aiogram.filters import Command
 from aiogram.types import Message
 
 from app.filters.is_owner import IsOwner
@@ -8,7 +9,7 @@ from app.filters.is_owner import IsOwner
 router = Router()
 
 
-@router.message(IsOwner(is_owner=True), commands="ping")
+@router.message(IsOwner(is_owner=True), Command(commands=["ping"]))
 async def ping_handler(message: Message):
     start = time.perf_counter_ns()
     reply_message = await message.answer("<code>⏱ Checking ping...</code>")

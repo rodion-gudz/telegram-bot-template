@@ -1,4 +1,5 @@
 from aiogram import Bot, Router
+from aiogram.filters import Command
 from aiogram.types import Message
 
 from app.db.functions import User
@@ -6,7 +7,7 @@ from app.db.functions import User
 router = Router()
 
 
-@router.message(commands="start")
+@router.message(Command(commands=["start"]))
 async def cmd_start(message: Message, bot: Bot):
     user_id = message.from_user.id
     bot_information = await bot.get_me()

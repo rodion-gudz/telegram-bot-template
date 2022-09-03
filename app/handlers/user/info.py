@@ -1,4 +1,5 @@
 from aiogram import Bot, Router
+from aiogram.filters import Command
 from aiogram.types import Message
 
 from app.config import Config
@@ -8,7 +9,7 @@ from app.ui.commands import owner_commands, users_commands
 router = Router()
 
 
-@router.message(commands="help")
+@router.message(Command(commands=["help"]))
 async def help_handler(message: Message, config: Config):
     text = "ℹ️ <b>Список команд:</b> \n\n"
     commands = (
@@ -21,7 +22,7 @@ async def help_handler(message: Message, config: Config):
     await message.answer(text)
 
 
-@router.message(commands="about")
+@router.message(Command(commands=["about"]))
 async def about_handler(message: Message, bot: Bot, config: Config):
     bot_information = await bot.get_me()
     await message.answer(
