@@ -1,9 +1,12 @@
+from aiogram.fsm.state import StatesGroup, State
 from aiogram.types import CallbackQuery
 from aiogram_dialog import Dialog, DialogManager, Window
 from aiogram_dialog.widgets.kbd import Button
 from aiogram_dialog.widgets.text import Const
 
-from app.states import SampleDialog
+
+class SampleDialog(StatesGroup):
+    greeting = State()
 
 
 async def show_alert(c: CallbackQuery, _: Button, manager: DialogManager):

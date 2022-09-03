@@ -3,7 +3,7 @@ from aiogram.filters import Command
 from aiogram.types import Message
 from aiogram_dialog import DialogManager
 
-from app.states import SampleDialog
+from app.dialogs.sample_dialog import SampleDialog
 
 router = Router()
 
