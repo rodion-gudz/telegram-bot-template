@@ -96,7 +96,11 @@ async def main():
     except FileExistsError:
         await db.migrate_models(tortoise_config)
 
-    session = AiohttpSession(api=TelegramAPIServer.from_base(config.api.bot_api_url, is_local=config.api.is_local))
+    session = AiohttpSession(
+        api=TelegramAPIServer.from_base(
+            config.api.bot_api_url, is_local=config.api.is_local
+        )
+    )
     token = config.bot.token
     bot_settings = {"session": session, "parse_mode": "HTML"}
 
