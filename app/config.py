@@ -65,6 +65,10 @@ class ConfigApi:
     hash: str = "b18441a1ff607e10a989891a5462e627"
     bot_api_url: str = "https://api.telegram.org"
 
+    @property
+    def is_local(self):
+        return self.bot_api_url != "https://api.telegram.org"
+
 
 @dataclass
 class Config:
