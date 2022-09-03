@@ -46,6 +46,7 @@ async def on_startup(
         await bot.set_webhook(
             webhook_url,
             drop_pending_updates=config.settings.drop_pending_updates,
+            allowed_updates=dispatcher.resolve_used_update_types(),
         )
     else:
         await bot.delete_webhook(
@@ -83,8 +84,7 @@ async def on_shutdown(dispatcher: Dispatcher, bot: Bot, config: Config):
 
 
 async def main():
-    logging_level = logging.INFO
-    coloredlogs.install(level=logging_level)
+    coloredlogs.install(level=logging.INFO)
     logging.warning("Starting bot...")
 
     arguments = parse_arguments()
@@ -133,17 +133,18 @@ async def main():
 
     if config.settings.use_webhook:
         web_app = web.Application()
-        SimpleRequestHandler(dispatcher=dp, bot=bot).register(
+        SimpleRequestHandler(dispatcher=dp, bot=bot, **context_kwargs).register(
             web_app, path=config.webhook.path
         )
+
         setup_application(web_app, dp, bot=bot, **context_kwargs)
-        # noinspection PyProtectedMember
-        await web._run_app(
-            app=web_app,
-            port=config.webhook.port,
-            access_log=None,
-            print=lambda msg: None,
-        )
+
+        runner = web.AppRunner(web_app)
+        await runner.setup()
+        site = web.TCPSite(runner, port=config.webhook.port)
+        await site.start()
+
+        await asyncio.Event().wait()
     else:
         await dp.start_polling(bot, **context_kwargs)
 
