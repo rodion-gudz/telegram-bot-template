@@ -132,6 +132,8 @@ async def main():
         context_kwargs["client"] = pyrogram_client
 
     if config.settings.use_webhook:
+        logging.getLogger("aiohttp.access").setLevel(logging.CRITICAL)
+
         web_app = web.Application()
         SimpleRequestHandler(dispatcher=dp, bot=bot, **context_kwargs).register(
             web_app, path=config.webhook.path
