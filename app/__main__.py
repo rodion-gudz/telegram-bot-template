@@ -15,7 +15,7 @@ from pyrogram import Client
 
 from app import db
 from app.arguments import parse_arguments
-from app.config import parse_config, Config
+from app.config import Config, parse_config
 from app.db import close_orm, init_orm
 from app.dialogs import register_dialogs
 from app.handlers import get_handlers_router
