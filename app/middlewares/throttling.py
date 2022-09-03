@@ -6,26 +6,25 @@ from cachetools import TTLCache
 
 from app.config import Config
 
-cache: TTLCache
-
 
 class ThrottlingMiddleware(BaseMiddleware):
+
+    def __init__(self, config: Config):
+        super().__init__()
+        self.cache = TTLCache(maxsize=10_000, ttl=config.settings.throttling_rate)
+
     async def __call__(
         self,
         handler: Callable[[Update, Dict[str, Any]], Awaitable[Any]],
         event: Update,
         data: Dict[str, Any],
     ) -> Any:
-        if event.chat.id in cache:
+        if event.chat.id in self.cache:
             return
-        cache[event.chat.id] = None
+        self.cache[event.chat.id] = None
         return await handler(event, data)
 
 
 def register_middleware(dp: Dispatcher, config: Config):
-    global cache
-
-    cache = TTLCache(maxsize=10_000, ttl=config.settings.throttling_rate)
-
-    throttling_middleware = ThrottlingMiddleware()
+    throttling_middleware = ThrottlingMiddleware(config=config)
     dp.message.middleware(throttling_middleware)
