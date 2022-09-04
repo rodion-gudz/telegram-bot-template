@@ -15,13 +15,13 @@ from pyrogram import Client
 
 from app import db
 from app.arguments import parse_arguments
+from app.commands import remove_bot_commands, setup_bot_commands
 from app.config import Config, parse_config
 from app.db import close_orm, init_orm
 from app.dialogs import register_dialogs
 from app.handlers import get_handlers_router
 from app.inline.handlers import get_inline_router
 from app.middlewares import register_middlewares
-from app.commands import remove_bot_commands, setup_bot_commands
 
 
 async def on_startup(
@@ -96,7 +96,11 @@ async def main():
     except FileExistsError:
         await db.migrate_models(tortoise_config)
 
-    session = AiohttpSession(api=TelegramAPIServer.from_base(config.api.bot_api_url, is_local=config.api.is_local))
+    session = AiohttpSession(
+        api=TelegramAPIServer.from_base(
+            config.api.bot_api_url, is_local=config.api.is_local
+        )
+    )
     token = config.bot.token
     bot_settings = {"session": session, "parse_mode": "HTML"}
 

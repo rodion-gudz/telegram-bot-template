@@ -8,7 +8,6 @@ from app.config import Config
 
 
 class ThrottlingMiddleware(BaseMiddleware):
-
     def __init__(self, config: Config):
         self.cache = TTLCache(maxsize=10_000, ttl=config.settings.throttling_rate)
 
