@@ -21,7 +21,7 @@ from app.dialogs import register_dialogs
 from app.handlers import get_handlers_router
 from app.inline.handlers import get_inline_router
 from app.middlewares import register_middlewares
-from app.ui.commands import remove_bot_commands, setup_bot_commands
+from app.commands import remove_bot_commands, setup_bot_commands
 
 
 async def on_startup(
