@@ -1,4 +1,4 @@
-aiogram-dialog==2.0.0b9
+aiogram-dialog==2.0.0b10.dev1
 aiogram==3.0.0b4
 aioredis
 aiosqlite
