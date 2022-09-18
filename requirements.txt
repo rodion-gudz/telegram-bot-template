@@ -1,14 +1,13 @@
+aerich
 aiogram-dialog==2.0.0b9
 aiogram==3.0.0b4
+aiohttp
 aioredis
 aiosqlite
 cachetools
 coloredlogs
 pyrogram>=2.0.0
-sqlalchemy[asyncio]
+redis
 tgcrypto
 toml
-aiohttp
-redis
-aerich
 tortoise-orm
