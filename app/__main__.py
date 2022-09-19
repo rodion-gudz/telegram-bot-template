@@ -1,7 +1,6 @@
 import asyncio
 import logging
 
-import aioredis
 import coloredlogs
 from aiogram import Bot, Dispatcher
 from aiogram.client.session.aiohttp import AiohttpSession
@@ -104,7 +103,7 @@ async def main():
 
     if config.storage.use_persistent_storage:
         storage = RedisStorage(
-            redis=aioredis.from_url(config.storage.redis_url),
+            redis=RedisStorage.from_url(config.storage.redis_url),
             key_builder=DefaultKeyBuilder(with_destiny=True),
         )
     else:
