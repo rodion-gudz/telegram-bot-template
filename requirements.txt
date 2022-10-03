@@ -1,6 +1,6 @@
 aerich
 aiogram-dialog==2.0.0b9
-aiogram==3.0.0b4
+aiogram==3.0.0b5
 aiohttp
 aiosqlite
 cachetools
