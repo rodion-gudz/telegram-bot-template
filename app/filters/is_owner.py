@@ -5,7 +5,6 @@ from app.config import Config
 
 
 class IsOwner(Filter):
-
     def __init__(self, is_owner: bool) -> None:
         self.is_owner = is_owner
 
