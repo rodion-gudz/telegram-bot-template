@@ -5,6 +5,7 @@ aiohttp
 aiosqlite
 cachetools
 coloredlogs
+fluentogram
 pyrogram>=2.0.0
 redis
 tgcrypto

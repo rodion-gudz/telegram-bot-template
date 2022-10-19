@@ -10,24 +10,27 @@ from aiogram.fsm.storage.redis import DefaultKeyBuilder, RedisStorage
 from aiogram.webhook.aiohttp_server import SimpleRequestHandler, setup_application
 from aiogram_dialog import DialogRegistry
 from aiohttp import web
+from fluent_compiler.bundle import FluentBundle
+from fluentogram import TranslatorHub, FluentTranslator
 from pyrogram import Client
 
 from app import db
 from app.arguments import parse_arguments
+from app.commands import remove_bot_commands, setup_bot_commands
 from app.config import Config, parse_config
 from app.db import close_orm, init_orm
 from app.dialogs import register_dialogs
 from app.handlers import get_handlers_router
 from app.inline.handlers import get_inline_router
 from app.middlewares import register_middlewares
-from app.commands import remove_bot_commands, setup_bot_commands
+from app.misc.paths import RESOURCES_DIR
+from app.services.fluent import locales_map, DEFAULT_LANGUAGE, SUPPORTED_LOCALES
 
 
 async def on_startup(
     dispatcher: Dispatcher, bot: Bot, config: Config, registry: DialogRegistry
 ):
-
-    register_middlewares(dp=dispatcher, config=config)
+    register_middlewares(dp=dispatcher, config=config, registry=registry)
 
     dispatcher.include_router(get_handlers_router())
     dispatcher.include_router(get_inline_router())
@@ -115,7 +118,28 @@ async def main():
 
     registry = DialogRegistry(dp)
 
-    context_kwargs = {"config": config, "registry": registry}
+    locales = [
+        FluentTranslator(
+            locale=code,
+            translator=FluentBundle.from_files(
+                locale=locale,
+                filenames=filter(
+                    lambda filename: filename.suffix == ".ftl",
+                    (RESOURCES_DIR / "text" / code).iterdir(),
+                ),
+                use_isolating=False,
+            ),
+        )
+        for code, locale in SUPPORTED_LOCALES.items()
+    ]
+
+    fluent = TranslatorHub(
+        locales_map=locales_map,
+        translators=locales,
+        root_locale=DEFAULT_LANGUAGE,
+    )
+
+    context_kwargs = {"config": config, "registry": registry, "fluent": fluent}
 
     if config.settings.use_pyrogram_client:
         pyrogram_client = Client(

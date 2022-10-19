@@ -1,6 +1,7 @@
 from aiogram import Bot, Router
 from aiogram.filters import Command
 from aiogram.types import Message
+from fluentogram import TranslatorRunner
 
 from app.commands import owner_commands, users_commands
 from app.config import Config
@@ -10,8 +11,8 @@ router = Router()
 
 
 @router.message(Command(commands=["help"]))
-async def help_handler(message: Message, config: Config):
-    text = "ℹ️ <b>Список команд:</b> \n\n"
+async def help_handler(message: Message, config: Config, i18n: TranslatorRunner):
+    text = i18n.help() + "\n\n"
     commands = (
         owner_commands.items()
         if message.from_user.id == config.settings.owner_id
@@ -23,12 +24,15 @@ async def help_handler(message: Message, config: Config):
 
 
 @router.message(Command(commands=["about"]))
-async def about_handler(message: Message, bot: Bot, config: Config):
+async def about_handler(
+    message: Message, bot: Bot, config: Config, i18n: TranslatorRunner
+):
     bot_information = await bot.get_me()
     await message.answer(
-        "<b>ℹ️ Информация о боте:</b> \n\n"
-        f"<b>Название - </b> {bot_information.full_name} \n"
-        f"<b>Username - </b> @{bot_information.username} \n"
-        f"<b>ID - </b> <code>{bot_information.id}</code> \n",
+        i18n.about(
+            bot_full_name=bot_information.full_name,
+            bot_username=bot_information.username,
+            bot_id=str(bot_information.id),
+        ),
         reply_markup=get_author_keyboard(owner_id=config.settings.owner_id),
     )
