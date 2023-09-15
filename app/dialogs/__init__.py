@@ -1,7 +1,11 @@
-from aiogram_dialog import DialogRegistry
+from aiogram import Router
 
 
-def register_dialogs(registry: DialogRegistry):
-    from . import sample_dialog
+def get_dialog_router() -> Router:
+    from .sample_dialog import ui
 
-    registry.register(sample_dialog.ui)
+    dialog_routers = Router()
+
+    dialog_routers.include_router(ui)
+
+    return dialog_routers

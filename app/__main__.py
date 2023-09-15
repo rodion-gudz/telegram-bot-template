@@ -8,7 +8,7 @@ from aiogram.client.telegram import TelegramAPIServer
 from aiogram.fsm.storage.memory import MemoryStorage
 from aiogram.fsm.storage.redis import DefaultKeyBuilder, RedisStorage
 from aiogram.webhook.aiohttp_server import SimpleRequestHandler, setup_application
-from aiogram_dialog import DialogRegistry
+from aiogram_dialog import setup_dialogs
 from aiohttp import web
 from pyrogram import Client
 
@@ -16,23 +16,19 @@ from app import db
 from app.arguments import parse_arguments
 from app.config import Config, parse_config
 from app.db import close_orm, init_orm
-from app.dialogs import register_dialogs
+from app.dialogs import get_dialog_router
 from app.handlers import get_handlers_router
 from app.inline.handlers import get_inline_router
 from app.middlewares import register_middlewares
 from app.commands import remove_bot_commands, setup_bot_commands
 
 
-async def on_startup(
-    dispatcher: Dispatcher, bot: Bot, config: Config, registry: DialogRegistry
-):
-
+async def on_startup(dispatcher: Dispatcher, bot: Bot, config: Config):
     register_middlewares(dp=dispatcher, config=config)
 
     dispatcher.include_router(get_handlers_router())
     dispatcher.include_router(get_inline_router())
-
-    register_dialogs(registry)
+    dispatcher.include_router(get_dialog_router())
 
     await setup_bot_commands(bot, config)
 
@@ -95,7 +91,11 @@ async def main():
     except FileExistsError:
         await db.migrate_models(tortoise_config)
 
-    session = AiohttpSession(api=TelegramAPIServer.from_base(config.api.bot_api_url, is_local=config.api.is_local))
+    session = AiohttpSession(
+        api=TelegramAPIServer.from_base(
+            config.api.bot_api_url, is_local=config.api.is_local
+        )
+    )
     token = config.bot.token
     bot_settings = {"session": session, "parse_mode": "HTML"}
 
@@ -113,7 +113,7 @@ async def main():
     dp.startup.register(on_startup)
     dp.shutdown.register(on_shutdown)
 
-    registry = DialogRegistry(dp)
+    registry = setup_dialogs(dp)
 
     context_kwargs = {"config": config, "registry": registry}
 
